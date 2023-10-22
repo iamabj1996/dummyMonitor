@@ -148,7 +148,10 @@ const App = () => {
 		setSearchValue(e.target.value);
 	};
 
-	const columns = Object.keys(dataForBar[0]).filter((key) => key !== 'name');
+	const columns =
+		dataForBar &&
+		dataForBar.length > 0 &&
+		Object.keys(dataForBar[0]).filter((key) => key !== 'name');
 
 	const getColumnName = (name) => {
 		if (name === 'scNo') {
@@ -263,9 +266,10 @@ const App = () => {
 											<thead>
 												<tr>
 													<th>Name</th>
-													{columns.map((col) => (
-														<th key={col}>{getColumnName(col)}</th>
-													))}
+													{columns &&
+														columns?.map((col) => (
+															<th key={col}>{getColumnName(col)}</th>
+														))}
 												</tr>
 											</thead>
 											<tbody>
