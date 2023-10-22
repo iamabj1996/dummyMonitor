@@ -180,7 +180,7 @@ const App = () => {
 			<Navbar expand='lg' className='bg-primary '>
 				<Container>
 					<Navbar.Brand href='#home' className='text-secondary'>
-						{}
+						NuvoChain
 					</Navbar.Brand>
 					<Navbar.Toggle aria-controls='basic-navbar-nav' />
 					<Navbar.Collapse id='basic-navbar-nav' style={{ marginLeft: '60%' }}>
