@@ -4,7 +4,7 @@ import { abi, address } from './Table';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
-import NavDropdown from 'react-bootstrap/NavDropdown';
+import Table from 'react-bootstrap/Table';
 import {
 	Bar,
 	BarChart,
@@ -61,6 +61,9 @@ const App = () => {
 			scNo: spaceTrx[3].length,
 			csNo: spaceTrx[4].length,
 			brNo: spaceTrx[5].length,
+			scL: spaceTrx[3],
+			csL: spaceTrx[4],
+			brL: spaceTrx[5],
 		});
 
 		const caliberationTrx = await tokenContract.methods
@@ -76,6 +79,9 @@ const App = () => {
 			scNo: caliberationTrx[3].length,
 			csNo: caliberationTrx[4].length,
 			brNo: caliberationTrx[5].length,
+			scL: caliberationTrx[3],
+			csL: caliberationTrx[4],
+			brL: caliberationTrx[5],
 		});
 
 		console.log('newData', newData);
@@ -90,9 +96,12 @@ const App = () => {
 		console.log(' capitalPlanning', capitalPlanningTrx);
 		newData.push({
 			name: 'Capital Planning',
-			scNo: caliberationTrx[3].length,
-			csNo: caliberationTrx[4].length,
-			brNo: caliberationTrx[5].length,
+			scNo: capitalPlanningTrx[3].length,
+			csNo: capitalPlanningTrx[4].length,
+			brNo: capitalPlanningTrx[5].length,
+			scL: capitalPlanningTrx[3],
+			csL: capitalPlanningTrx[4],
+			brL: capitalPlanningTrx[5],
 		});
 
 		const realEstatePlanningTrx = await tokenContract.methods
@@ -104,10 +113,13 @@ const App = () => {
 			.call({ from: '0xb507d99973a645357c8352DBff23963CA4E4A5d3' });
 		console.log(' capitalPlanning', realEstatePlanningTrx);
 		newData.push({
-			name: 'Real Estate Manage ',
+			name: 'Real Estate AM ',
 			scNo: realEstatePlanningTrx[3].length,
 			csNo: realEstatePlanningTrx[4].length,
 			brNo: realEstatePlanningTrx[5].length,
+			scL: realEstatePlanningTrx[3],
+			csL: realEstatePlanningTrx[4],
+			brL: realEstatePlanningTrx[5],
 		});
 		setDataForBar(newData);
 	};
@@ -136,12 +148,35 @@ const App = () => {
 		setSearchValue(e.target.value);
 	};
 
+	const columns = Object.keys(dataForBar[0]).filter((key) => key !== 'name');
+
+	const getColumnName = (name) => {
+		if (name === 'scNo') {
+			return 'Script Includes';
+		}
+		if (name === 'csNo') {
+			return 'Client Scripts';
+		}
+		if (name === 'brNo') {
+			return 'Business Rules';
+		}
+		if (name === 'scL') {
+			return 'SI List';
+		}
+		if (name === 'csL') {
+			return 'CS List';
+		}
+		if (name === 'brL') {
+			return 'BR List';
+		}
+	};
+
 	return (
 		<>
 			<Navbar expand='lg' className='bg-primary '>
 				<Container>
 					<Navbar.Brand href='#home' className='text-secondary'>
-						NuvoloChain
+						{}
 					</Navbar.Brand>
 					<Navbar.Toggle aria-controls='basic-navbar-nav' />
 					<Navbar.Collapse id='basic-navbar-nav' style={{ marginLeft: '60%' }}>
@@ -181,41 +216,73 @@ const App = () => {
 						</div>
 					)}
 					{!noRecordsFound && (
-						<BarChart
-							width={700}
-							height={300}
-							data={dataForBar}
-							margin={{
-								top: 5,
-								right: 30,
-								left: 20,
-								bottom: 5,
-							}}
-						>
-							<CartesianGrid strokeDasharray='3 3' />
-							<XAxis dataKey='name' />
-							<YAxis />
-							<Tooltip />
-							<Legend />
-							<Bar
-								name='No SI changes'
-								dataKey='scNo'
-								fill='#8884d8'
-								activeBar={<Rectangle fill='pink' stroke='blue' />}
-							/>
-							<Bar
-								name='No CS changes'
-								dataKey='csNo'
-								fill='#82ca9d'
-								activeBar={<Rectangle fill='gold' stroke='purple' />}
-							/>
-							<Bar
-								name='No BR changes'
-								dataKey='brNo'
-								fill='#82ca5f'
-								activeBar={<Rectangle fill='blue' stroke='purple' />}
-							/>
-						</BarChart>
+						<div>
+							<div>
+								{' '}
+								<BarChart
+									width={window.innerWidth}
+									height={400}
+									data={dataForBar}
+									margin={{
+										top: 5,
+										right: 30,
+										left: 20,
+										bottom: 5,
+									}}
+								>
+									<CartesianGrid strokeDasharray='3 3' />
+									<XAxis dataKey='name' />
+									<YAxis />
+									<Tooltip />
+									<Legend />
+									<Bar
+										name='No SI changes'
+										dataKey='scNo'
+										fill='#8884d8'
+										activeBar={<Rectangle fill='pink' stroke='blue' />}
+									/>
+									<Bar
+										name='No CS changes'
+										dataKey='csNo'
+										fill='#82ca9d'
+										activeBar={<Rectangle fill='gold' stroke='purple' />}
+									/>
+									<Bar
+										name='No BR changes'
+										dataKey='brNo'
+										fill='#82ca5f'
+										activeBar={<Rectangle fill='blue' stroke='purple' />}
+									/>
+								</BarChart>
+							</div>
+
+							<Container fluid className='mt-5'>
+								<Row>
+									<Col>
+										<Table striped bordered hover responsive>
+											<thead>
+												<tr>
+													<th>Name</th>
+													{columns.map((col) => (
+														<th key={col}>{getColumnName(col)}</th>
+													))}
+												</tr>
+											</thead>
+											<tbody>
+												{dataForBar.map((row, rowIndex) => (
+													<tr key={rowIndex}>
+														<td>{row.name}</td>
+														{columns.map((col, colIndex) => (
+															<td key={colIndex}>{row[col]}</td>
+														))}
+													</tr>
+												))}
+											</tbody>
+										</Table>
+									</Col>
+								</Row>
+							</Container>
+						</div>
 					)}
 				</Col>
 				<Col></Col>
