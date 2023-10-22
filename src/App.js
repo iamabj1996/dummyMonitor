@@ -148,6 +148,7 @@ const App = () => {
 		setSearchValue(e.target.value);
 	};
 
+	//run this
 	const columns =
 		dataForBar &&
 		dataForBar.length > 0 &&
